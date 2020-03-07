@@ -1,0 +1,30 @@
+on: push
+name: Test, Build and Release Web
+jobs:
+  build:
+    name: Build Website
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '1.7.8+hotfix.4'
+      - run: flutter channel master; flutter upgrade; flutter config --enable-web
+      - run: flutter pub get
+      - run: flutter test
+      - run: flutter build web
+      - name: Push Web Build
+        env:
+          GITHUB_TOKEN: ${{ secrets.githubtoken }}
+          GITHUB_EMAIL: ${{ secrets.email }}
+          GITHUB_NAME: ${{ secrets.name }}
+        run: |
+          git config user.email "${GITHUB_EMAIL}"
+          git config user.name "${GITHUB_NAME}"
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          git checkout master
+          rm -rf .gitignore
+          git add .
+          git commit -m "Building Web"
+          git subtree split --prefix build/web -b gh-pages
+          git push -f origin gh-pages:gh-pages
