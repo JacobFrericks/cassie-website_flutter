@@ -9,7 +9,7 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           flutter-version: '1.7.8+hotfix.4'
-      - run: flutter channel master; flutter upgrade; flutter config --enable-web
+      - run: flutter channel beta; flutter upgrade; flutter config --enable-web
       - run: flutter pub get
       - run: flutter test
       - run: flutter build web
