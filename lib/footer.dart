@@ -15,7 +15,7 @@ class _ScreenState extends State<Footer> {
           Padding(
             padding: EdgeInsets.only(top: 10),
           ),
-          contactUsButton(),
+          contactMeButton(),
           Padding(
             padding: EdgeInsets.only(top: 10),
           ),
@@ -23,7 +23,7 @@ class _ScreenState extends State<Footer> {
     );
   }
 
-  Widget contactUsButton() {
+  Widget contactMeButton() {
     return FlatButton(
       color: Color.fromRGBO(0, 128, 128, 1),
       textColor: Colors.white,

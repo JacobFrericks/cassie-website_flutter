@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'pages/contact_us.dart';
+import 'pages/contact_me.dart';
 import 'pages/home.dart';
 
 class Website extends StatelessWidget {
@@ -11,7 +11,7 @@ class Website extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => Scaffold(body: HomePage()),
-        '/contactUs': (context) => Scaffold(body: ContactUs()),
+        '/contactMe': (context) => Scaffold(body: ContactMe()),
       }
     );
   }

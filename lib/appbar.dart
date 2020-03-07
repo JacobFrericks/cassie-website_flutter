@@ -69,11 +69,11 @@ class _ScreenState extends State<CustomAppBar> {
       ),
       fromHamburgerMenu ? Padding(padding: EdgeInsets.only(top: 5)) : Container(),
       GestureDetector(
-        onTap: () => Navigator.pushNamed(context, '/contactUs'),
+        onTap: () => Navigator.pushNamed(context, '/contactMe'),
         child: Center(child:
           Padding(
               padding: EdgeInsets.only(left: 8, right: 8),
-              child: Text("Contact Us", style: TextStyle(fontSize: 20, color: Colors.white))
+              child: Text("Contact Me", style: TextStyle(fontSize: 20, color: Colors.white))
           )
         ),
       ),

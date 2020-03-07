@@ -8,14 +8,14 @@ import '../appbar.dart';
 import '../banner.dart';
 
 
-class ContactUs extends StatefulWidget {
-  ContactUs({Key key}) : super(key: key);
+class ContactMe extends StatefulWidget {
+  ContactMe({Key key}) : super(key: key);
 
   @override
-  _ContactUsState createState() => _ContactUsState();
+  _ContactMeState createState() => _ContactMeState();
 }
 
-class _ContactUsState extends State<ContactUs> {
+class _ContactMeState extends State<ContactMe> {
   final _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
   String _name;
@@ -34,7 +34,7 @@ class _ContactUsState extends State<ContactUs> {
   @override
   Widget build(BuildContext context) {
 
-    List<Widget> contactUsWidgets = <Widget>[
+    List<Widget> contactMeWidgets = <Widget>[
       banner(),
       new Container(
         margin: new EdgeInsets.all(15.0),
@@ -48,9 +48,9 @@ class _ContactUsState extends State<ContactUs> {
 
     return ListView.builder (
         shrinkWrap: true,
-        itemCount: contactUsWidgets.length,
+        itemCount: contactMeWidgets.length,
         itemBuilder: (BuildContext ctxt, int index) {
-          return contactUsWidgets[index];
+          return contactMeWidgets[index];
         },
     );
   }
@@ -61,7 +61,7 @@ class _ContactUsState extends State<ContactUs> {
         width: double.infinity,
         child: Stack(
           children: <Widget>[
-            new CustomBanner("Contact Us", false, "assets/child_handwriting.jpeg"),
+            new CustomBanner("Contact Me", false, "assets/child_handwriting.jpeg"),
             new CustomAppBar(),
           ],
         )
