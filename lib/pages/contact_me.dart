@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 import 'dart:io';
 
@@ -69,59 +70,59 @@ class _ContactMeState extends State<ContactMe> {
   }
 
   Widget FormUI() {
-    return new Column(
-      children: <Widget>[
-        new TextFormField(
-          controller: _nameTextController,
-          decoration: const InputDecoration(labelText: 'Name'),
-          keyboardType: TextInputType.text,
-          validator: validateName,
-          onSaved: (String val) {
-            _name = val;
-          },
-        ),
-        new TextFormField(
-          controller: _emailTextController,
-          decoration: const InputDecoration(labelText: 'Email'),
-          keyboardType: TextInputType.emailAddress,
-          validator: validateEmail,
-          onSaved: (String val) {
-            _email = val;
-          },
-        ),
-        new TextFormField(
-          controller: _messageTextController,
-          decoration: const InputDecoration(labelText: 'Message'),
-          keyboardType: TextInputType.multiline,
-          maxLines: null,
-          onSaved: (String val) {
-            _message = val;
-          },
-        ),
-        new SizedBox(
-          height: 10.0,
-        ),
-        new RaisedButton(
-          onPressed: _validateInputs,
-          child: new Text('Submit'),
-        )
-      ],
+    return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              SizedBox(height: 150.0,),
+              //input field for email
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Name'),
+                validator: validateName,
+                onSaved: (value) => _name = value,
+              ),
+              //input field for password
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Email'),
+                validator: validateEmail,
+                onSaved: (value) => _email = value,
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Message'),
+                onSaved: (value) => _message = value,
+              ),
+              RaisedButton(
+                child: Text ('Submit', style: TextStyle(fontSize: 20.0),),
+                onPressed: _validateInputs,
+
+              )
+            ]
     );
   }
 
-  _showSnackBar() {
-    var successMessage = "Thank you! We will respond to your message soon!";
+  _showSnackBar(String message, bool success) {
+    Color backgroundColor;
+    if (success) {
+      backgroundColor = Colors.green;
+    } else {
+      backgroundColor = Colors.red;
+    }
     final snackbar = SnackBar(
-        content: new Text(successMessage, style: TextStyle(color: Colors.white), textAlign: TextAlign.center),
-        backgroundColor: Colors.green
+        content: new Text(message, style: TextStyle(color: Colors.white), textAlign: TextAlign.center),
+        backgroundColor: backgroundColor
     );
     Scaffold.of(context).showSnackBar(snackbar);
   }
 
   String validateName(String value) {
-    if (value.length < 3)
-      return 'Name must be more than 2 charater';
+    if (value == null || value.length < 3)
+      return 'Name must be more than 2 charaters';
     else
+      if (value == null) {
+        print("FAILED");
+        return "Not a valid input";
+      }
+      print("SUCCESS");
+      _name = value;
       return null;
   }
 
@@ -132,17 +133,20 @@ class _ContactMeState extends State<ContactMe> {
     if (!regex.hasMatch(value))
       return 'Enter Valid Email';
     else
+      if (value == null) {
+        return "Not a valid input";
+      }
+      _email = value;
       return null;
   }
 
-  void _validateInputs() {
-    if (_isSubmitButtonDisabled) {
-      return null;
-    } else {
-      setState(() =>  _isSubmitButtonDisabled = true );
+  void _validateInputs() async {
+    final form = _formKey.currentState;
+    if(form.validate()) {
+      _formKey.currentState.save();
+      _sendEmail();
     }
 
-    _sendEmail();
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
     } else {
@@ -159,19 +163,22 @@ class _ContactMeState extends State<ContactMe> {
   }
 
   void _sendEmail() async {
-    String postBody = '{"message": "$_message", "name": "$_name", "email": "$_email"}';
-//    var response = await http.post(
-//        'https://bejomkze58.execute-api.us-east-1.amazonaws.com/default/email-bobs-vending',
-//        body: postBody
-//    );
-//    print(response.statusCode);
-//    print(response.body);
-    _showSnackBar();
-    print("DONE");
-//    if(response.statusCode >= 200 && response.statusCode < 300) {
-//      _showSnackBar();
-//      _clearTextFields();
-//    }
+    String postBody = json.encode({"to": "cassie_tutoring", "message": _message, "name": _name, "email": _email});
+    print(postBody);
+    print("Attempting post...");
+    var response = await http.post(
+        'https://236hz4fdx4.execute-api.us-east-1.amazonaws.com/default/email_function',
+        body: postBody
+    );
+    print(response.statusCode);
+    print(response.body);
+    if(response.statusCode < 300) {
+      _showSnackBar("Thank you! We will respond to your message soon!", true);
+      _clearTextFields();
+    } else {
+      _showSnackBar("An error occurred! Please try again later.", false);
+      print(response);
+    }
     setState(() =>  _isSubmitButtonDisabled = false );
   }
 }
